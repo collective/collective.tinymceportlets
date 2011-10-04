@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.0a2 (2011-10-04)
+------------------
+
+- Add refresh button to get the list of 
+  portlets since I can't know when the context
+  is changed with the contenttree widget always.
+
+
 1.0a1 (2011-10-04)
 ------------------
 

@@ -34,7 +34,7 @@ def Portlets(context):
     else:
         mng_name = req.get('manager')
 
-    if 'context' not in req:
+    if 'context' in req:
         context_req = str(req.get('context')).strip()
         mod_context = context.restrictedTraverse(context_req, None)
         if mod_context is None:
@@ -42,8 +42,7 @@ def Portlets(context):
             mod_context = ref_cat.lookupObject(context_req)
         if mod_context:
             context = mod_context
-    else:
-        context = site.restrictedTraverse(str(req.get('context')))
+
     mng_name = mng_name.strip()
     manager = getUtility(IPortletManager, name=mng_name, context=context)
     retriever = getMultiAdapter((context, manager), IPortletRetriever)

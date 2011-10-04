@@ -106,6 +106,8 @@ function loadOverlay(selected){
           jq("#form-widgets-portlet").html('<option value="' + portlet + '" id="form-widgets-portlet-0">' + portlet + '</option>');
         }
       }
+
+      jq('#form-widgets-portlet').after('<a href="#" id="refresh-portlet-list">Refresh List</a>');
     }
   });
   $(overlay_selector).overlay().load();
@@ -136,6 +138,11 @@ jq(content_selector + ' input[name="form.buttons.remove"]').live('click', functi
 
 jq(content_selector + ' #form-widgets-manager,input[name="form.widgets.context:list"]').live('change', function(){
   loadOverlay(getOverlayConfig());
+});
+
+jq('#refresh-portlet-list').live('click', function(){
+  loadOverlay(getOverlayConfig());
+  return false;
 });
 
 jq(content_selector + ' form#form').live('submit', function(){ return false; });
