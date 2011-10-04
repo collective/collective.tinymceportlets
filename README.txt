@@ -10,3 +10,10 @@ It works by using plone.transformchain to add the portlets into the document
 after it has been rendered.
 
 Only tested on Plone 4.1 but could work on other versions.
+
+On Plone 4.1, you'll have to pin plone.formwidget.contenttree::
+
+	[versions]
+	...
+	plone.formwidget.contenttree = 1.0.4
+	...
