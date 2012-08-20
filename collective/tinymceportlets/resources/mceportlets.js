@@ -1,5 +1,5 @@
 var overlay_selector = '#pb_9991';
-var overlay_content_selector = overlay_selector + ' .pb-ajax';
+var overlay_content_selector = overlay_selector + ' .pb-ajax .overlaycontent';
 var content_selector = overlay_content_selector;
 var selected_checkbox = null;
 var checkTimout = null;
@@ -19,7 +19,7 @@ function checkContextCheckChange(){
   checkTimout = setTimeout(checkContextCheckChange, 500);
 }
 
-$('body').append('<div id="pb_9991" class="overlay overlay-ajax "><div class="close"><span>Close</span></div><div class="pb-ajax"></div></div>');
+$('body').append('<div id="pb_9991" class="overlay overlay-ajax "><div class="close"><span>Close</span></div><div class="pb-ajax"><div class="overlaycontent"></div></div></div>');
 
 $("#pb_9991").overlay({
     onClose : function(){
@@ -116,7 +116,7 @@ function loadOverlay(selected){
 
       $('#form-widgets-portlet').after('<a href="#" id="refresh-portlet-list"> Refresh List</a>');
       $('#refresh-portlet-list').after(
-        '<br /><a href="' +
+        '<br /><a target="_blank" href="' +
         $('base').attr('href') + '/@@manage-tinymceportlets">Add/Remove Tiny MCE Portlets</a>');
 
       clearTimeout(checkTimout);

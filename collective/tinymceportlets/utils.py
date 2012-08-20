@@ -1,4 +1,7 @@
 from collective.tinymceportlets import PORTLET_CLASS_IDENTIFIER
+import binascii
+decode = binascii.a2b_hex
+encode = binascii.b2a_hex
 
 
 def portletHash(manager, assignment, context):
@@ -7,9 +10,9 @@ def portletHash(manager, assignment, context):
     else:
         context = '/'.join(context.getPhysicalPath())
     return "%s-%s-%s" % (
-        manager.__name__,
-        assignment.__name__,
-        context
+        encode(manager.__name__),
+        encode(assignment.__name__),
+        encode(context)
     )
 
 
@@ -21,7 +24,5 @@ def portletMarkup(hash):
 
 
 def decodeHash(hash):
-    first, rest = hash.split('-', 1)
-    result = [first]
-    result.extend(rest.rsplit('-', 1))
-    return result
+    mng, assignment, context = hash.split('-')
+    return decode(mng), decode(assignment), decode(context)

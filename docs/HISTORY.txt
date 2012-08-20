@@ -9,6 +9,8 @@ Changelog
 - Do not choose portlet manager--just show all available portlets
   on context
 
+- encode and decode hashes better. Old tiny mce portlets are now incompatible
+
 
 1.0a2 (2011-10-04)
 ------------------
