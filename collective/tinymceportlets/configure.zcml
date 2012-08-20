@@ -29,6 +29,12 @@
     class=".views.PortletSelectionFormView"
     permission="cmf.ModifyPortalContent"
     layer='.interfaces.TinyMCEPortletsLayer' />
+  <browser:page
+    for="*"
+    name="render-mce-portlet"
+    class=".views.RenderPortletFromHash"
+    permission="cmf.ModifyPortalContent"
+    layer='.interfaces.TinyMCEPortletsLayer' />
     
   <adapter factory=".views.PortletSelectionAdapter" />
   <utility

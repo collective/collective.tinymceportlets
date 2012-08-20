@@ -131,11 +131,23 @@ function loadOverlay(selected){
 $(content_selector).delegate('input[name="form.buttons.save"]', 'click', function(){
   var node = tinyMCE.activeEditor.selection.getNode();
   var item = $(node);
+  var portlet = null;
+  var hash = portletHash();
   if(item.length > 0 && item.hasClass('mce-only')){
-    item[0].className = "TINYMCEPORTLET mce-only " + portletHash();
+    portlet = item[0];
+    portlet.className = "TINYMCEPORTLET mce-only " + hash;
+    portlet = $(portlet);
   }else{
-    item.append('<img class="TINYMCEPORTLET mce-only ' + portletHash() + '" src="++resource++collective.tinymceportlets/add-portlets.png" />');
+    portlet = $('<div class="TINYMCEPORTLET mce-only ' + hash + '"></div>');
+    item.append(portlet);
   }
+  $.ajax({
+    url: portal_url + '/@@render-mce-portlet',
+    data: {hash: hash},
+    success: function(data){
+      portlet.append(data);
+    }
+  })
   $(overlay_selector).overlay().close();
 });
 

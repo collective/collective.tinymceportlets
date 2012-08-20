@@ -6,3 +6,8 @@ div.tinymceportlet{
 div.contenttreeWindow{
 	z-index: 999999;
 }
+
+.TINYMCEPORTLET{
+    border: 1px dashed red;
+    font-size: 50%;
+}

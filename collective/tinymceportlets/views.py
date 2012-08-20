@@ -1,3 +1,4 @@
+from Products.Five import BrowserView
 from plone.portlets.interfaces import ILocalPortletAssignmentManager
 from Acquisition import aq_inner
 from plone.portlets.interfaces import IPortletAssignmentMapping
@@ -16,6 +17,7 @@ from plone.formwidget.contenttree import PathSourceBinder
 from z3c.form import form, button, field
 from zope.app.pagetemplate import ViewPageTemplateFile as Zope3PageTemplateFile
 from plone.app.portlets.browser.manage import ManageContextualPortlets
+from collective.tinymceportlets.utils import renderPortletFromHash
 
 
 class IPortletSelectionForm(Interface):
@@ -86,3 +88,9 @@ class TinyMCEPortletsManager(ManageContextualPortlets):
         if not assignable.getBlacklistStatus(CONTEXT_CATEGORY):
             assignable.setBlacklistStatus(CONTEXT_CATEGORY, True)
         return super(TinyMCEPortletsManager, self).__call__()
+
+
+class RenderPortletFromHash(BrowserView):
+
+    def __call__(self):
+        return renderPortletFromHash(self.request['hash'], self.request)

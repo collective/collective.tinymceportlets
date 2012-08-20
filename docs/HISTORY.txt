@@ -11,6 +11,7 @@ Changelog
 
 - encode and decode hashes better. Old tiny mce portlets are now incompatible
 
+- place actual portlet html in placeholder--style is dynamic though
 
 1.0a2 (2011-10-04)
 ------------------
