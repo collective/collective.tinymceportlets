@@ -33,15 +33,18 @@
   <adapter factory=".views.PortletSelectionAdapter" />
   <utility
     provides="zope.schema.interfaces.IVocabularyFactory"
-    component=".vocabularies.PortletManagers"
-    name="collective.tinymceportlets.vocabularies.portletmanagers" />
-  <utility
-    provides="zope.schema.interfaces.IVocabularyFactory"
     component=".vocabularies.Portlets"
     name="collective.tinymceportlets.vocabularies.contextportlets" />
         
   <browser:resourceDirectory
     name="collective.tinymceportlets"
     directory="resources" />
-      
+
+  <browser:page
+    name="manage-tinymceportlets"
+    for="plone.portlets.interfaces.ILocalPortletAssignable"
+    class=".views.TinyMCEPortletsManager"
+    template="manage-portlets.pt"
+    permission="plone.app.portlets.ManagePortlets"
+    />
 </configure>

@@ -1,8 +1,25 @@
 var overlay_selector = '#pb_9991';
 var overlay_content_selector = overlay_selector + ' .pb-ajax';
 var content_selector = overlay_content_selector;
+var selected_checkbox = null;
+var checkTimout = null;
 
-jq('body').append('<div id="pb_9991" class="overlay overlay-ajax "><div class="close"><span>Close</span></div><div class="pb-ajax"></div></div>');
+function checkContextCheckChange(){
+  if($(content_selector).length == 0){
+    return;
+  }
+  var selected = $('#form-widgets-context-input-fields input:checked');
+  if(selected.length > 0){
+    var id = selected.attr('id');
+    if(selected_checkbox != id){
+      selected_checkbox = id;
+      loadOverlay(getOverlayConfig());
+    }
+  }
+  checkTimout = setTimeout(checkContextCheckChange, 500);
+}
+
+$('body').append('<div id="pb_9991" class="overlay overlay-ajax "><div class="close"><span>Close</span></div><div class="pb-ajax"></div></div>');
 
 $("#pb_9991").overlay({
     onClose : function(){
@@ -11,19 +28,16 @@ $("#pb_9991").overlay({
 });
 
 function getOverlayConfig(){
-  var context_input = jq('input[name="form.widgets.context:list"]:checked');
+  var context_input = $('input[name="form.widgets.context:list"]:checked');
   return { 
-    manager : jq("#form-widgets-manager").val(), 
     context : context_input.val(),
     context_ele : context_input.closest('span.option').clone(),
-    portlet : jq('#form-widgets-portlet').val()
+    portlet : $('#form-widgets-portlet').val()
   }
 }
 
 function portletHash(){
-  return jq("#form-widgets-manager").val() + '-' + 
-    jq('#form-widgets-portlet').val() + '-' +
-    jq('input[name="form.widgets.context:list"]:checked').val()
+  return $('#form-widgets-portlet option:selected').val();
 }
 
 function decodeHash(hash){
@@ -38,7 +52,6 @@ function decodeHash(hash){
 
 function loadOverlay(selected){
   var qs = '';
-  var manager = false;
   var context = false;
   var portlet = false;
   
@@ -47,7 +60,7 @@ function loadOverlay(selected){
     return;
   }
   item = ed.selection.getNode();
-  jqitem = jq(item);
+  jqitem = $(item);
 
   isCurrentPortlet = function(){
     return (jqitem.length > 0 && jqitem.hasClass('mce-only'));
@@ -60,8 +73,6 @@ function loadOverlay(selected){
   
   if(selected != undefined){
     qs = '?';
-    manager = selected.manager
-    qs += 'manager=' + manager;
     context = selected.context
     qs += '&context=' + context;
     portlet = selected.portlet;
@@ -76,46 +87,48 @@ function loadOverlay(selected){
     success: function(data, textStatus, req){
       wrap.html(data);
 
-
       if(isCurrentPortlet()){
       
       }else{
-        jq(content_selector + ' input[name="form.buttons.save"]').attr('value', 'Add');
-        jq(content_selector + ' input[name="form.buttons.remove"]').hide();
-      }
-      if(manager != false){
-        jq(content_selector + ' #form-widgets-manager').val(manager);
+        $(content_selector + ' input[name="form.buttons.save"]').attr('value', 'Add');
+        $(content_selector + ' input[name="form.buttons.remove"]').hide();
       }
       if(context != false){
-        var input = jq(content_selector + ' input[value="' + context + '"]');
+        var input = $(content_selector + ' input[value="' + context + '"]');
         if(input.length > 0){
           input[0].checked = true;
         }else{
           if(selected.context_ele != undefined && selected.context_ele.length > 0){
             input = selected.context_ele;
             input.find('input')[0].checked = true;
-            jq('#form-widgets-context-input-fields').append(input);
+            $('#form-widgets-context-input-fields').append(input);
           }
         }
       }
       if(portlet != false){
-        var input = jq('#form-widgets-portlet input[value="' + portlet + '"]');
+        var input = $('#form-widgets-portlet input[value="' + portlet + '"]');
         if(input.length > 0){
           input[0].checked = true;
         }else if(selected.context_ele == undefined){
-          jq("#form-widgets-portlet").html('<option value="' + portlet + '" id="form-widgets-portlet-0">' + portlet + '</option>');
+          $("#form-widgets-portlet").html('<option value="' + portlet + '" id="form-widgets-portlet-0">' + portlet + '</option>');
         }
       }
 
-      jq('#form-widgets-portlet').after('<a href="#" id="refresh-portlet-list">Refresh List</a>');
+      $('#form-widgets-portlet').after('<a href="#" id="refresh-portlet-list"> Refresh List</a>');
+      $('#refresh-portlet-list').after(
+        '<br /><a href="' +
+        $('base').attr('href') + '/@@manage-tinymceportlets">Add/Remove Tiny MCE Portlets</a>');
+
+      clearTimeout(checkTimout);
+      checkContextCheckChange();
     }
   });
   $(overlay_selector).overlay().load();
 }
 
-jq(content_selector + ' input[name="form.buttons.save"]').live('click', function(){
+$(content_selector).delegate('input[name="form.buttons.save"]', 'click', function(){
   var node = tinyMCE.activeEditor.selection.getNode();
-  var item = jq(node);
+  var item = $(node);
   if(item.length > 0 && item.hasClass('mce-only')){
     item[0].className = "TINYMCEPORTLET mce-only " + portletHash();
   }else{
@@ -124,28 +137,24 @@ jq(content_selector + ' input[name="form.buttons.save"]').live('click', function
   $(overlay_selector).overlay().close();
 });
 
-jq(content_selector + ' input[name="form.buttons.cancel"]').live('click', function(){
+$(content_selector).delegate('input[name="form.buttons.cancel"]', 'click', function(){
   $(overlay_selector).overlay().close();
   return false;
 });
 
-jq(content_selector + ' input[name="form.buttons.remove"]').live('click', function(){
+$(content_selector).delegate('input[name="form.buttons.remove"]', 'click', function(){
   var node = tinyMCE.activeEditor.selection.getNode();
-  var item = jq(node);
+  var item = $(node);
   item.remove();
   $(overlay_selector).overlay().close();
 });
 
-jq(content_selector + ' #form-widgets-manager,input[name="form.widgets.context:list"]').live('change', function(){
-  loadOverlay(getOverlayConfig());
-});
-
-jq('#refresh-portlet-list').live('click', function(){
+$(content_selector).delegate('#refresh-portlet-list', 'click', function(){
   loadOverlay(getOverlayConfig());
   return false;
 });
 
-jq(content_selector + ' form#form').live('submit', function(){ return false; });
+$(content_selector).delegate('form#form', 'submit', function(){ return false; });
 
 (function() {
   tinymce.create('tinymce.plugins.PortletsPlugin', {

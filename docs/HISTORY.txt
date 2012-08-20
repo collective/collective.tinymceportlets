@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.1a1 (unreleased)
+------------------
+
+- Add tiny mce only portlet manager
+
+- Do not choose portlet manager--just show all available portlets
+  on context
+
+
 1.0a2 (2011-10-04)
 ------------------
 

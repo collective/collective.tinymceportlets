@@ -115,7 +115,7 @@ class TinyMCEPortletsTransform(object):
             site = getSite()
             ref_cat = getToolByName(site, 'reference_catalog')
             view = site.restrictedTraverse('@@plone')
-            for tag in _portlet_selector(result.tree):
+            for tag in portlets:
                 add_portlet(tag, self.request, site, ref_cat, view)
 
         return result

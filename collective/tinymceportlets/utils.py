@@ -21,4 +21,7 @@ def portletMarkup(hash):
 
 
 def decodeHash(hash):
-    return hash.split('-', 2)
+    first, rest = hash.split('-', 1)
+    result = [first]
+    result.extend(rest.rsplit('-', 1))
+    return result
