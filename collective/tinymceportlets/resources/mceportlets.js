@@ -82,6 +82,7 @@ function loadOverlay(selected){
   
   var wrap = $(overlay_content_selector);
   var url = $('base').attr('href') + '/@@add-tinymce-portlet' + qs;
+  $('#kss-spinner').show();
   jq.ajax({
     url : url, 
     success: function(data, textStatus, req){
@@ -121,6 +122,7 @@ function loadOverlay(selected){
 
       clearTimeout(checkTimout);
       checkContextCheckChange();
+      $('#kss-spinner').hide();
     }
   });
   $(overlay_selector).overlay().load();
